@@ -38,7 +38,18 @@ export function AuthControl() {
 
   if (!isAuthenticated) {
     return (
-      <Button size="sm" variant="outline" render={<Link href="/login"><LogIn data-icon="inline-start" />Login</Link>} />
+      <Button
+        size="sm"
+        variant="outline"
+        className="px-2 sm:px-2.5"
+        aria-label="Login"
+        render={
+          <Link href="/login">
+            <LogIn data-icon="inline-start" />
+            <span className="hidden sm:inline">Login</span>
+          </Link>
+        }
+      />
     )
   }
 
@@ -56,9 +67,16 @@ export function AuthControl() {
   }
 
   return (
-    <Button size="sm" variant="outline" disabled={isSigningOut} onClick={handleSignOut}>
+    <Button
+      size="sm"
+      variant="outline"
+      className="px-2 sm:px-2.5"
+      aria-label={isSigningOut ? "Logging out" : "Logout"}
+      disabled={isSigningOut}
+      onClick={handleSignOut}
+    >
       <LogOut data-icon="inline-start" />
-      {isSigningOut ? "Logging out..." : "Logout"}
+      <span className="hidden sm:inline">{isSigningOut ? "Logging out..." : "Logout"}</span>
     </Button>
   )
 }

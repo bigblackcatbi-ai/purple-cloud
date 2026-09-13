@@ -67,9 +67,18 @@ export function TopBarSave() {
   }
 
   return (
-    <Button size="sm" variant="outline" disabled={saving} onClick={handleSave}>
+    <Button
+      size="sm"
+      variant="outline"
+      className="px-2 sm:px-2.5"
+      aria-label={saving ? "Saving backup" : status === "saved" ? "Backup saved" : status === "error" ? "Backup save failed" : "Save backup"}
+      disabled={saving}
+      onClick={handleSave}
+    >
       <Save data-icon="inline-start" />
-      {saving ? "Saving..." : status === "saved" ? "Saved" : status === "error" ? "Save failed" : "Save"}
+      <span className="hidden sm:inline">
+        {saving ? "Saving..." : status === "saved" ? "Saved" : status === "error" ? "Save failed" : "Save"}
+      </span>
     </Button>
   )
 }
