@@ -2,16 +2,14 @@
 
 import { useMemo } from "react"
 import Link from "next/link"
-import { Building2, Images, SwatchBook, Users } from "lucide-react"
+import { Building2, Images, Users } from "lucide-react"
 import { PageHeader } from "@/components/page-header"
 import { StatCard } from "@/components/stat-card"
 import { DesignCard } from "@/components/design-card"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ColorSwatch } from "@/components/color-swatch"
 import { StatusBadge } from "@/components/status-badge"
 import { useData } from "@/lib/store"
-import { pantoneByCode } from "@/lib/pantone"
 import type { DesignStatus } from "@/lib/types"
 
 const STATUS_ORDER: DesignStatus[] = [
@@ -22,7 +20,7 @@ const STATUS_ORDER: DesignStatus[] = [
 ]
 
 export default function DashboardPage() {
-  const { designs, companies, customers, pantones } = useData()
+  const { designs, companies, customers } = useData()
 
   const recent = useMemo(
     () =>
@@ -38,49 +36,27 @@ export default function DashboardPage() {
     return map
   }, [designs])
 
-  const topColors = useMemo(() => {
-    const tally = new Map<string, number>()
-    for (const d of designs) {
-      for (const c of d.colors) {
-        if (c.pantoneCode) tally.set(c.pantoneCode, (tally.get(c.pantoneCode) ?? 0) + 1)
-        for (const comp of c.components ?? [])
-          tally.set(comp.pantoneCode, (tally.get(comp.pantoneCode) ?? 0) + 1)
-      }
-    }
-    return [...tally.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 8)
-      .map(([code, count]) => ({ color: pantoneByCode(code), code, count }))
-      .filter((x) => x.color)
-  }, [designs])
+  const totalColors = useMemo(
+    () => designs.reduce((count, design) => count + design.colors.length, 0),
+    [designs],
+  )
 
   return (
     <>
-      <PageHeader
-        title="Dashboard"
-        description="Your color and design library at a glance."
-      />
+      <PageHeader title="Dashboard" description="Your design workspace at a glance." />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Designs" value={designs.length} icon={Images} />
         <StatCard label="Companies" value={companies.length} icon={Building2} />
         <StatCard label="Customers" value={customers.length} icon={Users} />
-        <StatCard
-          label="Library colors"
-          value={pantones.length}
-          icon={SwatchBook}
-        />
+        <StatCard label="Colors" value={totalColors} icon={Images} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <section className="flex flex-col gap-4 lg:col-span-2">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Recently updated</h2>
-            <Button
-              variant="ghost"
-              size="sm"
-              render={<Link href="/designs">View all</Link>}
-            />
+            <Button variant="ghost" size="sm" render={<Link href="/designs">View all</Link>} />
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {recent.map((d) => (
@@ -97,43 +73,19 @@ export default function DashboardPage() {
             <CardContent className="flex flex-col gap-3">
               {STATUS_ORDER.map((status) => {
                 const count = statusCounts.get(status) ?? 0
-                const pct = designs.length
-                  ? Math.round((count / designs.length) * 100)
-                  : 0
+                const pct = designs.length ? Math.round((count / designs.length) * 100) : 0
                 return (
                   <div key={status} className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between text-sm">
                       <StatusBadge status={status} />
-                      <span className="tabular-nums text-muted-foreground">
-                        {count}
-                      </span>
+                      <span className="tabular-nums text-muted-foreground">{count}</span>
                     </div>
                     <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                      <div
-                        className="h-full rounded-full bg-primary/70"
-                        style={{ width: `${pct}%` }}
-                      />
+                      <div className="h-full rounded-full bg-primary/70" style={{ width: `${pct}%` }} />
                     </div>
                   </div>
                 )
               })}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Most-used colors</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-2.5">
-              {topColors.map(({ color, code, count }) => (
-                <div key={code} className="flex items-center gap-3 text-sm">
-                  <ColorSwatch hex={color!.hex} size="sm" />
-                  <span className="truncate">{color!.name}</span>
-                  <span className="ml-auto font-mono text-xs text-muted-foreground">
-                    {count}×
-                  </span>
-                </div>
-              ))}
             </CardContent>
           </Card>
         </div>

@@ -4,11 +4,11 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   Building2,
+  Cloud,
   Images,
   LayoutDashboard,
   Plus,
   Star,
-  SwatchBook,
 } from "lucide-react"
 import {
   Sidebar,
@@ -21,16 +21,14 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 
 const nav = [
-  { title: "Dashboard", href: "/", icon: LayoutDashboard, exact: true },
+  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard, exact: true },
   { title: "Designs", href: "/designs", icon: Images },
   { title: "Favorites", href: "/favorites", icon: Star },
   { title: "Companies", href: "/companies", icon: Building2 },
-  { title: "Color Library", href: "/colors", icon: SwatchBook },
 ]
 
 export function AppSidebar() {
@@ -40,18 +38,15 @@ export function AppSidebar() {
     exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`)
 
   return (
-    <Sidebar>
+    <Sidebar className="z-20 shrink-0">
       <SidebarHeader>
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 rounded-md px-1 py-1.5"
-        >
+        <Link href="/" className="flex items-center gap-2.5 rounded-md px-1 py-1.5">
           <span className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <SwatchBook className="size-4.5" />
+            <LayoutDashboard className="size-4" />
           </span>
           <span className="flex flex-col leading-none">
-            <span className="text-sm font-semibold">Spectra</span>
-            <span className="text-xs text-muted-foreground">Color &amp; Design</span>
+            <span className="text-sm font-semibold">Purple Cloud</span>
+            <span className="text-xs text-muted-foreground">Design Studio</span>
           </span>
         </Link>
       </SidebarHeader>
@@ -66,9 +61,9 @@ export function AppSidebar() {
                     isActive={isActive(item.href, item.exact)}
                     tooltip={item.title}
                     render={
-                      <Link href={item.href}>
-                        <item.icon />
-                        <span>{item.title}</span>
+                      <Link href={item.href} className="flex min-w-0 items-center gap-2">
+                        <item.icon className="shrink-0" />
+                        <span className="truncate">{item.title}</span>
                       </Link>
                     }
                   />
@@ -88,8 +83,21 @@ export function AppSidebar() {
             </Link>
           }
         />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              isActive={isActive("/backup", true)}
+              tooltip="Backup & Restore"
+              render={
+                <Link href="/backup" className="flex min-w-0 items-center gap-2">
+                  <Cloud className="shrink-0" />
+                  <span className="truncate">Backup & Restore</span>
+                </Link>
+              }
+            />
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   )
 }

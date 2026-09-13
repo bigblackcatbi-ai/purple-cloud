@@ -1,21 +1,42 @@
-export type ColorKind = "pantone" | "custom" | "mixed"
+export type ColorKind = "direct" | "mixed"
 
 export type DesignStatus = "draft" | "approved" | "in-production" | "archived"
 
 export interface MixComponent {
-  pantoneCode: string
+  colorCode: string
   parts: number
+}
+
+export interface ColorComponent {
+  colorCode: string
+  percentage: number
+}
+
+export interface MixedColorComponent {
+  id: string
+  colorCode: string
+  colorName: string
+  grams: number
+  additionalProperties?: Record<string, string>
 }
 
 export interface DesignColor {
   id: string
-  slot: number
-  name: string
-  kind: ColorKind
-  pantoneCode?: string
-  hex: string
+  designId?: string
+  slot?: number
+  colorNumber?: number
+  colorCode?: string
+  colorName?: string
+  name?: string
+  type: "direct" | "mixed"
+  kind?: ColorKind
   components?: MixComponent[]
+  formula?: ColorComponent[]
+  mixedComponents?: MixedColorComponent[]
+  additionalProperties?: Record<string, string>
   note?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface DesignImage {
@@ -36,8 +57,11 @@ export interface Design {
   colors: DesignColor[]
   notes?: string
   favorite: boolean
+  dateCreated?: string
   createdAt: string
   updatedAt: string
+  designId?: string
+  designName?: string
 }
 
 export interface Customer {
@@ -48,6 +72,9 @@ export interface Customer {
   phone?: string
   note?: string
   createdAt: string
+  customerName?: string
+  contact?: string
+  notes?: string
 }
 
 export interface Company {
@@ -57,12 +84,7 @@ export interface Company {
   location?: string
   note?: string
   createdAt: string
-}
-
-export interface PantoneColor {
-  code: string
-  name: string
-  hex: string
-  family: string
-  custom?: boolean
+  companyName?: string
+  notes?: string
+  updatedAt?: string
 }

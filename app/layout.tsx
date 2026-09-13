@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Spectra — Color & Design Studio',
+  title: 'Purple Cloud — Design Studio',
   description:
-    'Manage companies, customers, decal designs, and Pantone color formulas in one place.',
+    'Manage companies, customers, and design records with direct and mixed color entries.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'light',
+  colorScheme: 'light dark',
   themeColor: '#ffffff',
 }
 
@@ -49,11 +49,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="en"
-      className={`light bg-background ${geistSans.variable} ${geistMono.variable}`}
-    >
-      <body className="font-sans antialiased">
+    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="font-sans antialiased transition-colors duration-200">
         <Providers>{children}</Providers>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

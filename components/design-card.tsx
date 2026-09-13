@@ -1,8 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import { Star } from "lucide-react"
+import { Star, Trash2 } from "lucide-react"
 import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { ConfirmDialog } from "@/components/confirm-dialog"
 import { StatusBadge } from "@/components/status-badge"
 import { ColorStrip } from "@/components/color-formula"
 import { cn } from "@/lib/utils"
@@ -10,7 +12,7 @@ import type { Design } from "@/lib/types"
 import { useData } from "@/lib/store"
 
 export function DesignCard({ design }: { design: Design }) {
-  const { getCompany, getCustomer, toggleFavorite } = useData()
+  const { getCompany, getCustomer, toggleFavorite, deleteDesign } = useData()
   const company = getCompany(design.companyId)
   const customer = getCustomer(design.customerId)
   const cover = design.images[0]
@@ -23,7 +25,7 @@ export function DesignCard({ design }: { design: Design }) {
           e.preventDefault()
           toggleFavorite(design.id)
         }}
-        className="absolute top-2 right-2 z-10 flex size-8 items-center justify-center rounded-full bg-background/80 text-muted-foreground backdrop-blur transition-colors hover:text-foreground"
+        className="absolute top-2 left-2 z-10 flex size-8 items-center justify-center rounded-full bg-background/80 text-muted-foreground backdrop-blur transition-colors hover:text-foreground"
         aria-label={design.favorite ? "Remove from favorites" : "Add to favorites"}
         aria-pressed={design.favorite}
       >
@@ -34,6 +36,13 @@ export function DesignCard({ design }: { design: Design }) {
           )}
         />
       </button>
+
+      <ConfirmDialog
+        trigger={<Button variant="ghost" size="icon" className="absolute top-2 right-2 z-10 bg-background/80 text-destructive backdrop-blur hover:bg-background hover:text-destructive" aria-label={`Delete ${design.name}`}><Trash2 className="size-4" /></Button>}
+        title="Delete this design?"
+        description={`This will permanently remove "${design.name}" and all its color formulations.`}
+        onConfirm={() => deleteDesign(design.id)}
+      />
 
       <Link href={`/designs/${design.id}`} className="flex flex-col">
         <div className="relative aspect-4/3 overflow-hidden bg-muted">
@@ -71,6 +80,9 @@ export function DesignCard({ design }: { design: Design }) {
               {customer.name}
             </span>
           ) : null}
+          <span className="text-[11px] text-muted-foreground">
+            Created: {new Date(design.dateCreated ?? design.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
+          </span>
         </div>
       </Link>
     </Card>
