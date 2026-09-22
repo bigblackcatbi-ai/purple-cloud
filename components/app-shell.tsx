@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button"
 import { AppSidebar } from "@/components/app-sidebar"
 import { GlobalSearch } from "@/components/global-search"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { AuthControl } from "@/components/auth-control"
 import { TopBarSave } from "@/components/top-bar-save"
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -30,7 +29,6 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
             <ThemeToggle />
             <TopBarSave />
-            <AuthControl />
             <Button
               size="sm"
               className="px-2 sm:px-2.5"
