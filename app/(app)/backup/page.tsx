@@ -6,7 +6,7 @@ import { BackupRestorePanel } from "@/components/backup-restore"
 export default function BackupPage() {
   return (
     <>
-      <PageHeader title="Backup" description="Keep your data safe locally and in Google Drive." />
+      <PageHeader title="Backup" description="Keep your data safe locally on your computer." />
       <div className="mx-auto w-full max-w-3xl">
         <BackupRestorePanel />
       </div>
